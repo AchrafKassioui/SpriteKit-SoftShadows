@@ -7,16 +7,28 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		DE4447C2301070D2005CD2A8 /* LICENSE.txt in Resources */ = {isa = PBXBuildFile; fileRef = DE4447C0301070D2005CD2A8 /* LICENSE.txt */; };
+		DE4447C3301070D2005CD2A8 /* NOTICE.txt in Resources */ = {isa = PBXBuildFile; fileRef = DE4447C1301070D2005CD2A8 /* NOTICE.txt */; };
 		DE890A60300E9C1C00CE6FA3 /* Home.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE890A5F300E9C1C00CE6FA3 /* Home.swift */; };
 		DE890A62300E9D6A00CE6FA3 /* Scene.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE890A61300E9D6A00CE6FA3 /* Scene.swift */; };
 		DEF5F22E300E9E76004C74A7 /* Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEF5F22D300E9E76004C74A7 /* Helpers.swift */; };
+		DEF5F231300EA10D004C74A7 /* AppIcon.icon in Resources */ = {isa = PBXBuildFile; fileRef = DEF5F230300EA10D004C74A7 /* AppIcon.icon */; };
+		DEF5F233300EA273004C74A7 /* Renderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEF5F232300EA273004C74A7 /* Renderer.swift */; };
+		DEF5F235300EA3D9004C74A7 /* Shaders.metal in Sources */ = {isa = PBXBuildFile; fileRef = DEF5F234300EA3D9004C74A7 /* Shaders.metal */; };
+		DEF5F237300ED562004C74A7 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = DEF5F236300ED562004C74A7 /* README.md */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		000000000000000000000120 /* SpriteKitSoftShadows.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SpriteKitSoftShadows.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		DE4447C0301070D2005CD2A8 /* LICENSE.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = LICENSE.txt; sourceTree = "<group>"; };
+		DE4447C1301070D2005CD2A8 /* NOTICE.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = NOTICE.txt; sourceTree = "<group>"; };
 		DE890A5F300E9C1C00CE6FA3 /* Home.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Home.swift; sourceTree = "<group>"; };
 		DE890A61300E9D6A00CE6FA3 /* Scene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Scene.swift; sourceTree = "<group>"; };
 		DEF5F22D300E9E76004C74A7 /* Helpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Helpers.swift; sourceTree = "<group>"; };
+		DEF5F22F300E9F65004C74A7 /* SpriteKitSoftShadows.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SpriteKitSoftShadows.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		DEF5F230300EA10D004C74A7 /* AppIcon.icon */ = {isa = PBXFileReference; lastKnownFileType = folder.iconcomposer.icon; path = AppIcon.icon; sourceTree = "<group>"; };
+		DEF5F232300EA273004C74A7 /* Renderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Renderer.swift; sourceTree = "<group>"; };
+		DEF5F234300EA3D9004C74A7 /* Shaders.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = Shaders.metal; sourceTree = "<group>"; };
+		DEF5F236300ED562004C74A7 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -31,19 +43,17 @@
 		000000000000000000000001 = {
 			isa = PBXGroup;
 			children = (
+				DEF5F236300ED562004C74A7 /* README.md */,
+				DEF5F234300EA3D9004C74A7 /* Shaders.metal */,
+				DEF5F232300EA273004C74A7 /* Renderer.swift */,
 				DEF5F22D300E9E76004C74A7 /* Helpers.swift */,
-				DE890A61300E9D6A00CE6FA3 /* Scene.swift */,
 				DE890A5F300E9C1C00CE6FA3 /* Home.swift */,
-				000000000000000000000020 /* Products */,
+				DE890A61300E9D6A00CE6FA3 /* Scene.swift */,
+				DEF5F22F300E9F65004C74A7 /* SpriteKitSoftShadows.app */,
+				DEF5F230300EA10D004C74A7 /* AppIcon.icon */,
+				DE4447C0301070D2005CD2A8 /* LICENSE.txt */,
+				DE4447C1301070D2005CD2A8 /* NOTICE.txt */,
 			);
-			sourceTree = "<group>";
-		};
-		000000000000000000000020 /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				000000000000000000000120 /* SpriteKitSoftShadows.app */,
-			);
-			name = Products;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -61,7 +71,7 @@
 			);
 			name = SpriteKitSoftShadows;
 			productName = MyApp;
-			productReference = 000000000000000000000120 /* SpriteKitSoftShadows.app */;
+			productReference = DEF5F22F300E9F65004C74A7 /* SpriteKitSoftShadows.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -89,7 +99,7 @@
 			mainGroup = 000000000000000000000001;
 			minimizedProjectReferenceProxies = 1;
 			preferredProjectObjectVersion = 90;
-			productRefGroup = 000000000000000000000020 /* Products */;
+			productRefGroup = 000000000000000000000001;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
@@ -102,6 +112,10 @@
 		000000000000000140000000 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			files = (
+				DEF5F237300ED562004C74A7 /* README.md in Resources */,
+				DE4447C2301070D2005CD2A8 /* LICENSE.txt in Resources */,
+				DE4447C3301070D2005CD2A8 /* NOTICE.txt in Resources */,
+				DEF5F231300EA10D004C74A7 /* AppIcon.icon in Resources */,
 			);
 		};
 /* End PBXResourcesBuildPhase section */
@@ -110,9 +124,11 @@
 		000000000000000120000000 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			files = (
+				DEF5F233300EA273004C74A7 /* Renderer.swift in Sources */,
 				DE890A62300E9D6A00CE6FA3 /* Scene.swift in Sources */,
 				DEF5F22E300E9E76004C74A7 /* Helpers.swift in Sources */,
 				DE890A60300E9C1C00CE6FA3 /* Home.swift in Sources */,
+				DEF5F235300EA3D9004C74A7 /* Shaders.metal in Sources */,
 			);
 		};
 /* End PBXSourcesBuildPhase section */
@@ -253,12 +269,16 @@
 		000000000000000111000000 /* Debug configuration for PBXNativeTarget "SpriteKitSoftShadows" */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = G2XS6FMGZT;
 				ENABLE_APP_SANDBOX = YES;
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SELECTED_FILES = readonly;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = "SpriteKit Soft Shadows";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.developer-tools";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
@@ -269,10 +289,11 @@
 				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphonesimulator*]" = UIStatusBarStyleDefault;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 18.6;
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "devplaceholder.$(PROJECT_UNIQUE_VALUE:identifier).$(PRODUCT_NAME:identifier)";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.achrafkassioui.spritekit-softshadows";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				REGISTER_APP_GROUPS = YES;
 				SDKROOT = auto;
@@ -284,19 +305,24 @@
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2,7";
+				TARGETED_DEVICE_FAMILY = "1,2,6,7";
+				XROS_DEPLOYMENT_TARGET = "$(RECOMMENDED_XROS_DEPLOYMENT_TARGET)";
 			};
 			name = Debug;
 		};
 		000000000000000112000000 /* Release configuration for PBXNativeTarget "SpriteKitSoftShadows" */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = G2XS6FMGZT;
 				ENABLE_APP_SANDBOX = YES;
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SELECTED_FILES = readonly;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = "SpriteKit Soft Shadows";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.developer-tools";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
@@ -307,10 +333,11 @@
 				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphonesimulator*]" = UIStatusBarStyleDefault;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 18.6;
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "devplaceholder.$(PROJECT_UNIQUE_VALUE:identifier).$(PRODUCT_NAME:identifier)";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.achrafkassioui.spritekit-softshadows";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				REGISTER_APP_GROUPS = YES;
 				SDKROOT = auto;
@@ -322,7 +349,8 @@
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2,7";
+				TARGETED_DEVICE_FAMILY = "1,2,6,7";
+				XROS_DEPLOYMENT_TARGET = "$(RECOMMENDED_XROS_DEPLOYMENT_TARGET)";
 			};
 			name = Release;
 		};

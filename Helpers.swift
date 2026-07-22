@@ -1,13 +1,15 @@
-//
-//  Helpers.swift
-//  MyApp
-//
-//  Created by Achraf Kassioui on 20/7/2026.
-//
-
+/**
+ 
+ # Helpers
+ 
+ Achraf Kassioui
+ Created 6 Jul 2026
+ Updated 20 Jul 2026
+ 
+ */
 import SpriteKit
 
-// MARK: Generators
+// MARK: Texture Generators
 
 /// Radial white-to-transparent texture.
 func generateRadialGradientTexture(size: CGSize) -> SKTexture {

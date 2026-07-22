@@ -1,16 +1,17 @@
-//
-//  scene.swift
-//  MyApp
-//
-//  Created by Achraf Kassioui on 20/7/2026.
-//
+/**
+ 
+ # SpriteKit Scene
+ 
+ Achraf Kassioui
+ Created 6 Jul 2026
+ Updated 20 Jul 2026
+ 
+ */
 import SpriteKit
 import SwiftUI
 
-// MARK: Scene
-
 @Observable
-class AreaLightsScene: SKScene {
+class SoftShadowsScene: SKScene {
     
     // MARK: Properties
     
@@ -280,8 +281,7 @@ class AreaLightsScene: SKScene {
     private func makeShadowCaster(vertices: [CGPoint]) -> ShadowCaster {
         let shapeNode = SKShapeNode(path: makePath(from: vertices))
         shapeNode.fillColor = casterColor
-        shapeNode.strokeColor = .black.withAlphaComponent(0.3)
-        shapeNode.lineWidth = 1
+        shapeNode.lineWidth = 0
         
         return ShadowCaster(
             node: shapeNode,
