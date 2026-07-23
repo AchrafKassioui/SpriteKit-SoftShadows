@@ -95,6 +95,9 @@ fragment half4 displayFragment(
     half firstVisibleLight = firstLightAmount * (half(1.0) - firstShadow);
     half secondVisibleLight = secondLightAmount * (half(1.0) - secondShadow);
     
+    /// Ambient light affects the entire scene, including areas reached by no direct light.
+    /// Each direct light adds its colored contribution after distance falloff and shadowing.
+    /// A total light value of 1 preserves the SpriteKit color. Lower values darken it, higher values brighten it.
     half3 lightAmount = half3(ambientLight)
     + firstLightColor * firstVisibleLight * directLight
     + secondLightColor * secondVisibleLight * directLight;

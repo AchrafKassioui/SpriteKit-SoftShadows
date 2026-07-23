@@ -104,8 +104,8 @@ class MetalView: MTKView, MTKViewDelegate {
         let renderer = SKRenderer(device: device)
         renderer.scene = scene
         renderer.ignoresSiblingOrder = true
-        renderer.showsNodeCount = true
-        renderer.showsDrawCount = true
+        //renderer.showsNodeCount = true
+        //renderer.showsDrawCount = true
         
         /// Setup view
         self.scene = scene

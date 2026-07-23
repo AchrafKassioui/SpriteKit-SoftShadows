@@ -9,7 +9,7 @@
 /* Begin PBXBuildFile section */
 		DE4447C2301070D2005CD2A8 /* LICENSE.txt in Resources */ = {isa = PBXBuildFile; fileRef = DE4447C0301070D2005CD2A8 /* LICENSE.txt */; };
 		DE4447C3301070D2005CD2A8 /* NOTICE.txt in Resources */ = {isa = PBXBuildFile; fileRef = DE4447C1301070D2005CD2A8 /* NOTICE.txt */; };
-		DE890A60300E9C1C00CE6FA3 /* Home.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE890A5F300E9C1C00CE6FA3 /* Home.swift */; };
+		DE890A60300E9C1C00CE6FA3 /* UI.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE890A5F300E9C1C00CE6FA3 /* UI.swift */; };
 		DE890A62300E9D6A00CE6FA3 /* Scene.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE890A61300E9D6A00CE6FA3 /* Scene.swift */; };
 		DEF5F22E300E9E76004C74A7 /* Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEF5F22D300E9E76004C74A7 /* Helpers.swift */; };
 		DEF5F231300EA10D004C74A7 /* AppIcon.icon in Resources */ = {isa = PBXBuildFile; fileRef = DEF5F230300EA10D004C74A7 /* AppIcon.icon */; };
@@ -21,7 +21,7 @@
 /* Begin PBXFileReference section */
 		DE4447C0301070D2005CD2A8 /* LICENSE.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = LICENSE.txt; sourceTree = "<group>"; };
 		DE4447C1301070D2005CD2A8 /* NOTICE.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = NOTICE.txt; sourceTree = "<group>"; };
-		DE890A5F300E9C1C00CE6FA3 /* Home.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Home.swift; sourceTree = "<group>"; };
+		DE890A5F300E9C1C00CE6FA3 /* UI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UI.swift; sourceTree = "<group>"; };
 		DE890A61300E9D6A00CE6FA3 /* Scene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Scene.swift; sourceTree = "<group>"; };
 		DEF5F22D300E9E76004C74A7 /* Helpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Helpers.swift; sourceTree = "<group>"; };
 		DEF5F22F300E9F65004C74A7 /* SpriteKitSoftShadows.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SpriteKitSoftShadows.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -47,7 +47,7 @@
 				DEF5F234300EA3D9004C74A7 /* Shaders.metal */,
 				DEF5F232300EA273004C74A7 /* Renderer.swift */,
 				DEF5F22D300E9E76004C74A7 /* Helpers.swift */,
-				DE890A5F300E9C1C00CE6FA3 /* Home.swift */,
+				DE890A5F300E9C1C00CE6FA3 /* UI.swift */,
 				DE890A61300E9D6A00CE6FA3 /* Scene.swift */,
 				DEF5F22F300E9F65004C74A7 /* SpriteKitSoftShadows.app */,
 				DEF5F230300EA10D004C74A7 /* AppIcon.icon */,
@@ -127,7 +127,7 @@
 				DEF5F233300EA273004C74A7 /* Renderer.swift in Sources */,
 				DE890A62300E9D6A00CE6FA3 /* Scene.swift in Sources */,
 				DEF5F22E300E9E76004C74A7 /* Helpers.swift in Sources */,
-				DE890A60300E9C1C00CE6FA3 /* Home.swift in Sources */,
+				DE890A60300E9C1C00CE6FA3 /* UI.swift in Sources */,
 				DEF5F235300EA3D9004C74A7 /* Shaders.metal in Sources */,
 			);
 		};

@@ -10,6 +10,16 @@
 import SpriteKit
 import SwiftUI
 
+/// Initial values shared by the scene and its controls.
+enum RenderingDefaults {
+    static let lightRadius = 16.0
+    static let lightFalloffRadius = 750.0
+    static let ambientLight = 0.35
+    static let directLight = 1.0
+    static let shadowOpacity = 0.8
+    static let shadowFadeDistance = 32.0
+}
+
 @Observable
 class SoftShadowsScene: SKScene {
     
@@ -33,14 +43,14 @@ class SoftShadowsScene: SKScene {
         let offset: CGPoint
     }
     
-    // MARK: Rendering Knobs
-    
     var firstLight = SKNode()
     var secondLight = SKNode()
     
     private let minimumLightTouchSize: CGFloat = 44
     private let lightVisualName = "lightVisual"
     private let lightHitAreaName = "lightHitArea"
+    
+    // MARK: Rendering Knobs
     
     /// Controls whether the first light emits light and shadows.
     var firstLightEnabled = true {
@@ -56,14 +66,14 @@ class SoftShadowsScene: SKScene {
         }
     }
     
-    /// First direct light color.
+    /// Light A color.
     var firstLightColor: SKColor = .systemYellow {
         didSet {
             updateLights()
         }
     }
     
-    /// Second direct light color.
+    /// Light B color.
     var secondLightColor: SKColor = .systemCyan {
         didSet {
             updateLights()
@@ -71,23 +81,23 @@ class SoftShadowsScene: SKScene {
     }
     
     /// Area light radius used by the soft shadow projection.
-    var lightRadius: Double = 32 {
+    var lightRadius: Double = RenderingDefaults.lightRadius {
         didSet {
             updateLights()
         }
     }
     
     /// Distance where direct light fades out.
-    var lightFalloffRadius: Double = 750
+    var lightFalloffRadius: Double = RenderingDefaults.lightFalloffRadius
     
-    /// Base light everywhere, even in shadow.
-    var ambientLight: Double = 0.35
+    /// Ambient light. 1 = original SpriteKit colors.
+    var ambientLight: Double = RenderingDefaults.ambientLight
     
-    /// Extra light near each light source.
-    var directLight: Double = 0.9
+    /// Scales direct light after distance falloff and shadowing; 1 applies it unchanged.
+    var directLight: Double = RenderingDefaults.directLight
     
     /// Final strength of shadow masks.
-    var shadowOpacity: Double = 0.8
+    var shadowOpacity: Double = RenderingDefaults.shadowOpacity
     
     /// Shadow caster color.
     var casterColor: SKColor = .systemRed {
@@ -109,7 +119,7 @@ class SoftShadowsScene: SKScene {
     var showShadowMask = false
     
     /// Distance in points between light circle and shadow caster at which shadow begins to fade
-    var shadowFadeDistance: Double = 128
+    var shadowFadeDistance: Double = RenderingDefaults.shadowFadeDistance
     
     // MARK: Lifecycle
     
@@ -133,8 +143,8 @@ class SoftShadowsScene: SKScene {
         addChild(contentLayer)
         
         /// Lights.
-        firstLight = makeLight(position: CGPoint(x: -320, y: 180))
-        secondLight = makeLight(position: CGPoint(x: 320, y: -140))
+        firstLight = makeLight(position: CGPoint(x: -150, y: 180))
+        secondLight = makeLight(position: CGPoint(x: 150, y: 180))
         
         contentLayer.addChild(firstLight)
         contentLayer.addChild(secondLight)
@@ -148,76 +158,58 @@ class SoftShadowsScene: SKScene {
         backgroundNode = background
         
         /// Shadow casters.
-        createGrid(casterNumbers: 1...12)
+        createGrid()
     }
     
-    /// Creates a centered grid containing different convex caster shapes.
-    private func createGrid(casterNumbers: ClosedRange<Int>) {
-        let casterCount = casterNumbers.count
-        let columns = Int(ceil(sqrt(Double(casterCount))))
-        let rows = Int(ceil(Double(casterCount) / Double(columns)))
+    /// Creates a centered grid of casters in top-left to bottom-right reading order.
+    private func createGrid() {
+        /// The array order defines each caster's position in the grid.
+        let gridCasters: [ShadowCaster] = [
+            /// 1. Top left: rounded rectangle.
+            makeRoundedRectangleShadowCaster(
+                size: CGSize(width: 75, height: 75),
+                cornerRadius: 12,
+                cornerPoints: 4
+            ),
+            
+            /// 2. Top right: circle.
+            makeEllipseShadowCaster(
+                size: CGSize(width: 82, height: 82),
+                vertexCount: 32
+            ),
+            
+            /// 3. Bottom left: hexagon.
+            makeRegularPolygonShadowCaster(
+                sides: 6,
+                radius: 44
+            ),
+            
+            /// 4. Bottom right: triangle.
+            makeRegularPolygonShadowCaster(
+                sides: 3,
+                radius: 48,
+                rotation: -.pi * 0.5
+            )
+        ]
+        
+        let columns = 2
+        let rows = 2
         let casterSpacing: CGFloat = 150
         
         let gridWidth = CGFloat(columns - 1) * casterSpacing
         let gridHeight = CGFloat(rows - 1) * casterSpacing
         
-        for casterNumber in casterNumbers {
-            let casterIndex = casterNumber - casterNumbers.lowerBound
+        for (casterIndex, shadowCaster) in gridCasters.enumerated() {
             let column = casterIndex % columns
             let row = casterIndex / columns
-            
-            let shadowCaster: ShadowCaster
-            
-            /// Cycle through outlines that exercise different shadow geometries.
-            switch casterIndex % 6 {
-            case 0:
-                shadowCaster = makeRoundedRectangleShadowCaster(
-                    size: CGSize(width: 75, height: 75),
-                    cornerRadius: 12,
-                    cornerPoints: 4
-                )
-                
-            case 1:
-                shadowCaster = makeRegularPolygonShadowCaster(
-                    sides: 3,
-                    radius: 48,
-                    rotation: -.pi * 0.5
-                )
-                
-            case 2:
-                shadowCaster = makeRegularPolygonShadowCaster(
-                    sides: 4,
-                    radius: 48,
-                    rotation: .pi * 0.25
-                )
-                
-            case 3:
-                shadowCaster = makeRegularPolygonShadowCaster(
-                    sides: 6,
-                    radius: 44,
-                    rotation: 0
-                )
-                
-            case 4:
-                shadowCaster = makeEllipseShadowCaster(
-                    size: CGSize(width: 82, height: 82),
-                    vertexCount: 32
-                )
-                
-            default:
-                shadowCaster = makeEllipseShadowCaster(
-                    size: CGSize(width: 92, height: 58),
-                    vertexCount: 32
-                )
-            }
-            
             let casterNode = shadowCaster.node
+            
             casterNode.name = "draggable"
             
-            /// Center the grid around the scene origin.
+            /// Positions casters from top left to bottom right.
             casterNode.position = CGPoint(
                 x: CGFloat(column) * casterSpacing - gridWidth * 0.5,
-                y: CGFloat(row) * casterSpacing - gridHeight * 0.5
+                y: gridHeight * 0.5 - CGFloat(row) * casterSpacing
             )
             
             casterNode.zPosition = 20
