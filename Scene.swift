@@ -12,10 +12,16 @@ import SwiftUI
 
 /// Initial values shared by the scene and its controls.
 enum RenderingDefaults {
+    static let firstLightColor = Color(hex: "FFD673")
+    static let secondLightColor = Color(hex: "67BFBF")
+    
+    static let shapeColor = Color.red
+    static let backgroundColor = Color.gray
+    
+    static let lightIntensity = 1.0
     static let lightRadius = 16.0
     static let lightFalloffRadius = 750.0
     static let ambientLight = 0.35
-    static let directLight = 1.0
     static let shadowOpacity = 0.8
     static let shadowFadeDistance = 32.0
 }
@@ -25,12 +31,13 @@ class SoftShadowsScene: SKScene {
     
     // MARK: Properties
     
+    private let skView = SKView()
     private let contentLayer = SKNode()
     private var shadowCasters: [ShadowCaster] = []
     private var backgroundNode: SKSpriteNode?
     
     struct ShadowCaster {
-        let node: SKShapeNode
+        let node: SKSpriteNode
         
         /// Convex outline in local space, wound counter-clockwise.
         let vertices: [CGPoint]
@@ -52,29 +59,29 @@ class SoftShadowsScene: SKScene {
     
     // MARK: Rendering Knobs
     
-    /// Controls whether the first light emits light and shadows.
-    var firstLightEnabled = true {
-        didSet {
-            firstLight.isHidden = !firstLightEnabled
-        }
-    }
-    
-    /// Controls whether the second light emits light and shadows.
-    var secondLightEnabled = true {
-        didSet {
-            secondLight.isHidden = !secondLightEnabled
-        }
-    }
-    
     /// Light A color.
-    var firstLightColor: SKColor = .systemYellow {
+    var firstLightColor = RenderingDefaults.firstLightColor {
+        didSet {
+            updateLights()
+        }
+    }
+    
+    /// Light A intensity. Zero disables the light and its shadow calculation.
+    var firstLightIntensity: Double = RenderingDefaults.lightIntensity {
         didSet {
             updateLights()
         }
     }
     
     /// Light B color.
-    var secondLightColor: SKColor = .systemCyan {
+    var secondLightColor = RenderingDefaults.secondLightColor {
+        didSet {
+            updateLights()
+        }
+    }
+    
+    /// Light B intensity. Zero disables the light and its shadow calculation.
+    var secondLightIntensity: Double = RenderingDefaults.lightIntensity {
         didSet {
             updateLights()
         }
@@ -93,25 +100,22 @@ class SoftShadowsScene: SKScene {
     /// Ambient light. 1 = original SpriteKit colors.
     var ambientLight: Double = RenderingDefaults.ambientLight
     
-    /// Scales direct light after distance falloff and shadowing; 1 applies it unchanged.
-    var directLight: Double = RenderingDefaults.directLight
-    
     /// Final strength of shadow masks.
     var shadowOpacity: Double = RenderingDefaults.shadowOpacity
     
     /// Shadow caster color.
-    var casterColor: SKColor = .systemRed {
+    var casterColor = RenderingDefaults.shapeColor {
         didSet {
             shadowCasters.forEach { shadowCaster in
-                shadowCaster.node.fillColor = casterColor
+                shadowCaster.node.color = SKColor(casterColor)
             }
         }
     }
     
     /// Background color.
-    var receiverColor: SKColor = .gray {
+    var receiverColor = RenderingDefaults.backgroundColor {
         didSet {
-            backgroundNode?.color = receiverColor
+            backgroundNode?.color = SKColor(receiverColor)
         }
     }
     
@@ -152,7 +156,7 @@ class SoftShadowsScene: SKScene {
         updateLights()
         
         /// Background.
-        let background = SKSpriteNode(color: receiverColor, size: CGSize(width: 2000, height: 2000))
+        let background = SKSpriteNode(color: SKColor(receiverColor), size: CGSize(width: 2000, height: 2000))
         background.zPosition = 0
         contentLayer.addChild(background)
         backgroundNode = background
@@ -181,13 +185,13 @@ class SoftShadowsScene: SKScene {
             /// 3. Bottom left: hexagon.
             makeRegularPolygonShadowCaster(
                 sides: 6,
-                radius: 44
+                circumradius: 44
             ),
             
             /// 4. Bottom right: triangle.
             makeRegularPolygonShadowCaster(
                 sides: 3,
-                radius: 48,
+                circumradius: 48,
                 rotation: -.pi * 0.5
             )
         ]
@@ -246,18 +250,30 @@ class SoftShadowsScene: SKScene {
     }
     
     private func updateLights() {
-        updateLight(firstLight, color: firstLightColor)
-        updateLight(secondLight, color: secondLightColor)
+        updateLight(
+            firstLight,
+            color: firstLightColor,
+            intensity: firstLightIntensity
+        )
+        
+        updateLight(
+            secondLight,
+            color: secondLightColor,
+            intensity: secondLightIntensity
+        )
     }
     
-    private func updateLight(_ light: SKNode, color: SKColor) {
+    private func updateLight(_ light: SKNode, color: Color, intensity: Double) {
         let visualSize = max(CGFloat(lightRadius) * 2, 1)
         let touchSize = max(visualSize, minimumLightTouchSize)
+        
+        /// An intensity of zero disables the light and hides its scene marker.
+        light.isHidden = intensity <= 0
         
         /// Show the actual light radius.
         if let lightVisual = light.childNode(withName: lightVisualName) as? SKSpriteNode {
             lightVisual.size = CGSize(width: visualSize, height: visualSize)
-            lightVisual.color = color
+            lightVisual.color = SKColor(color)
             lightVisual.colorBlendFactor = 1
         }
         
@@ -269,14 +285,23 @@ class SoftShadowsScene: SKScene {
     
     // MARK: Shapes
     
-    /// Creates a visible caster and its matching shadow outline.
+    /// Creates a visible sprite caster and its matching shadow outline.
     private func makeShadowCaster(vertices: [CGPoint]) -> ShadowCaster {
         let shapeNode = SKShapeNode(path: makePath(from: vertices))
-        shapeNode.fillColor = casterColor
+        shapeNode.fillColor = .white
+        shapeNode.strokeColor = .clear
         shapeNode.lineWidth = 0
         
+        guard let texture = skView.texture(from: shapeNode) else {
+            fatalError("Unable to create the shadow caster texture.")
+        }
+        
+        let spriteNode = SKSpriteNode(texture: texture)
+        spriteNode.color = SKColor(casterColor)
+        spriteNode.colorBlendFactor = 1
+        
         return ShadowCaster(
-            node: shapeNode,
+            node: spriteNode,
             vertices: vertices
         )
     }
@@ -293,11 +318,11 @@ class SoftShadowsScene: SKScene {
     }
     
     /// Creates a regular polygon caster.
-    private func makeRegularPolygonShadowCaster(sides: Int, radius: CGFloat, rotation: CGFloat = 0) -> ShadowCaster {
+    private func makeRegularPolygonShadowCaster(sides: Int, circumradius: CGFloat, rotation: CGFloat = 0) -> ShadowCaster {
         makeShadowCaster(
             vertices: regularPolygonVertices(
                 sides: sides,
-                radius: radius,
+                circumradius: circumradius,
                 rotation: rotation
             )
         )
@@ -377,17 +402,45 @@ class SoftShadowsScene: SKScene {
         ]
     }
     
-    /// Generates a counter-clockwise regular polygon outline.
-    private func regularPolygonVertices(sides: Int, radius: CGFloat, rotation: CGFloat = 0) -> [CGPoint] {
+    /// Generates a counter-clockwise regular polygon centered within its visible bounds.
+    private func regularPolygonVertices(sides: Int, circumradius: CGFloat, rotation: CGFloat = 0) -> [CGPoint] {
         let sideCount = max(sides, 3)
         
-        return (0..<sideCount).map { vertexIndex in
+        let polygonVertices = (0..<sideCount).map { vertexIndex in
             let progress = CGFloat(vertexIndex) / CGFloat(sideCount)
             let angle = rotation + progress * CGFloat.pi * 2
             
             return CGPoint(
-                x: cos(angle) * radius,
-                y: sin(angle) * radius
+                x: cos(angle) * circumradius,
+                y: sin(angle) * circumradius
+            )
+        }
+        
+        guard let firstVertex = polygonVertices.first else {
+            return []
+        }
+        
+        var minimumX = firstVertex.x
+        var maximumX = firstVertex.x
+        var minimumY = firstVertex.y
+        var maximumY = firstVertex.y
+        
+        for vertex in polygonVertices.dropFirst() {
+            minimumX = min(minimumX, vertex.x)
+            maximumX = max(maximumX, vertex.x)
+            minimumY = min(minimumY, vertex.y)
+            maximumY = max(maximumY, vertex.y)
+        }
+        
+        let boundsCenter = CGPoint(
+            x: (minimumX + maximumX) * 0.5,
+            y: (minimumY + maximumY) * 0.5
+        )
+        
+        return polygonVertices.map { vertex in
+            CGPoint(
+                x: vertex.x - boundsCenter.x,
+                y: vertex.y - boundsCenter.y
             )
         }
     }
@@ -431,6 +484,7 @@ class SoftShadowsScene: SKScene {
     // MARK: CPU Pass
     
     /// Packs every caster edge reached by the circular light.
+    /// Called by the Metal renderer for each active light.
     func shadowSegments(for light: SKNode, shadowCasterVertices: [[CGPoint]]) -> [Float] {
         var shadowSegments: [Float] = []
         let lightRadius = CGFloat(self.lightRadius)

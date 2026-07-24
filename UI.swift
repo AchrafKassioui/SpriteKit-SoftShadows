@@ -88,6 +88,18 @@ struct ControlView: View {
     }
 }
 
+struct AreaLightsRepresentable: UIViewRepresentable {
+    let scene: SoftShadowsScene
+    
+    func makeUIView(context: Context) -> MetalView {
+        MetalView(scene: scene)
+    }
+    
+    func updateUIView(_ metalView: MetalView, context: Context) {
+        
+    }
+}
+
 // MARK: Panel
 
 private struct ControlPanel: View {
@@ -106,19 +118,21 @@ private struct ControlPanel: View {
         Section {
             LightControl(
                 title: "Light A",
-                color: colorBinding(\.firstLightColor),
-                isEnabled: $scene.firstLightEnabled
+                intensity: $scene.firstLightIntensity,
+                color: $scene.firstLightColor,
+                defaultIntensity: RenderingDefaults.lightIntensity,
+                defaultColor: RenderingDefaults.firstLightColor
             )
             
             LightControl(
                 title: "Light B",
-                color: colorBinding(\.secondLightColor),
-                isEnabled: $scene.secondLightEnabled
+                intensity: $scene.secondLightIntensity,
+                color: $scene.secondLightColor,
+                defaultIntensity: RenderingDefaults.lightIntensity,
+                defaultColor: RenderingDefaults.secondLightColor
             )
-            
-            Toggle("Show Shadow Mask", isOn: $scene.showShadowMask)
         } header: {
-            Label("Switches", systemImage: "lightswitch.on")
+            Label("Lights", systemImage: "lightbulb.2.fill")
         }
     }
     
@@ -126,12 +140,14 @@ private struct ControlPanel: View {
         Section {
             ColorControl(
                 title: "Shape Color",
-                color: colorBinding(\.casterColor)
+                color: $scene.casterColor,
+                defaultColor: RenderingDefaults.shapeColor
             )
             
             ColorControl(
                 title: "Background Color",
-                color: colorBinding(\.receiverColor)
+                color: $scene.receiverColor,
+                defaultColor: RenderingDefaults.backgroundColor
             )
         } header: {
             Label("Scene", systemImage: "paintpalette.fill")
@@ -165,14 +181,6 @@ private struct ControlPanel: View {
             )
             
             SliderControl(
-                title: "Light Intensity",
-                value: $scene.directLight,
-                defaultValue: RenderingDefaults.directLight,
-                range: 0...3,
-                decimalPlaces: 2
-            )
-            
-            SliderControl(
                 title: "Shadow Opacity",
                 value: $scene.shadowOpacity,
                 defaultValue: RenderingDefaults.shadowOpacity,
@@ -188,51 +196,83 @@ private struct ControlPanel: View {
                 decimalPlaces: 0
             )
             
+            /// Show the shadow mask before lighting is composited.
+            Toggle("Show Shadow Mask", isOn: $scene.showShadowMask)
+            
         } header: {
             Label("Lighting", systemImage: "slider.horizontal.3")
         }
     }
-    
-    private func colorBinding(_ keyPath: ReferenceWritableKeyPath<SoftShadowsScene, SKColor>) -> Binding<Color> {
-        Binding(
-            get: {
-                Color(scene[keyPath: keyPath])
-            },
-            set: { color in
-                scene[keyPath: keyPath] = SKColor(color)
-            }
-        )
-    }
 }
 
-// MARK: Controls
+// MARK: Light Control
 
 private struct LightControl: View {
     let title: String
     
+    @Binding var intensity: Double
     @Binding var color: Color
-    @Binding var isEnabled: Bool
+    
+    let defaultIntensity: Double
+    let defaultColor: Color
+    
+    /// Whether both light settings have their initial values.
+    private var isAtDefault: Bool {
+        intensity == defaultIntensity && color == defaultColor
+    }
     
     var body: some View {
-        HStack(spacing: 10) {
-            Toggle(title, isOn: $isEnabled)
+        VStack(spacing: 6) {
+            HStack {
+                Text(title)
+                    .font(.subheadline)
+                
+                Spacer()
+                
+                Text(
+                    intensity.formatted(
+                        .number
+                            .locale(Locale(identifier: "en_US_POSIX"))
+                            .precision(.fractionLength(2))
+                    )
+                )
+                .font(.caption.monospacedDigit())
+                .foregroundStyle(.secondary)
+                
+                Button {
+                    intensity = defaultIntensity
+                    color = defaultColor
+                } label: {
+                    Image(systemName: "arrow.counterclockwise")
+                        .frame(width: 24)
+                }
+                .buttonStyle(.borderless)
+                .disabled(isAtDefault)
+                .accessibilityLabel("Reset \(title)")
+            }
             
-            ColorPicker(
-                "\(title) Color",
-                selection: $color,
-                supportsOpacity: false
-            )
-            .labelsHidden()
-            .disabled(!isEnabled)
-            .opacity(isEnabled ? 1 : 0.4)
+            HStack(spacing: 12) {
+                Slider(value: $intensity, in: 0...3)
+                
+                ColorPicker(
+                    "\(title) Color",
+                    selection: $color,
+                    supportsOpacity: false
+                )
+                .labelsHidden()
+                .frame(width: 24)
+            }
         }
     }
 }
+
+// MARK: Color Control
 
 private struct ColorControl: View {
     let title: String
     
     @Binding var color: Color
+    let defaultColor: Color
     
     var body: some View {
         HStack {
@@ -240,6 +280,16 @@ private struct ColorControl: View {
             
             Spacer()
             
+            Button {
+                color = defaultColor
+            } label: {
+                Image(systemName: "arrow.counterclockwise")
+                    .frame(width: 24)
+            }
+            .buttonStyle(.borderless)
+            .disabled(color == defaultColor)
+            .accessibilityLabel("Reset \(title)")
+            
             ColorPicker(
                 "\(title) Color",
                 selection: $color,
@@ -249,6 +299,8 @@ private struct ColorControl: View {
         }
     }
 }
+
+// MARK: Slider
 
 private struct SliderControl: View {
     let title: String
@@ -290,19 +342,5 @@ private struct SliderControl: View {
             
             Slider(value: $value, in: range)
         }
-    }
-}
-
-// MARK: Metal View
-
-struct AreaLightsRepresentable: UIViewRepresentable {
-    let scene: SoftShadowsScene
-    
-    func makeUIView(context: Context) -> MetalView {
-        MetalView(scene: scene)
-    }
-    
-    func updateUIView(_ metalView: MetalView, context: Context) {
-        
     }
 }

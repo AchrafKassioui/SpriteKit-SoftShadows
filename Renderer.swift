@@ -11,6 +11,7 @@
  */
 import MetalKit
 import SpriteKit
+import SwiftUI
 
 class MetalView: MTKView, MTKViewDelegate {
     
@@ -208,7 +209,7 @@ class MetalView: MTKView, MTKViewDelegate {
         renderShadowMask(
             into: firstShadowTexture,
             for: scene.firstLight,
-            isEnabled: scene.firstLightEnabled,
+            isEnabled: scene.firstLightIntensity > 0,
             lightIndex: 0,
             shadowBufferIndex: shadowBufferIndex,
             shadowCasterVertices: shadowCasterVertices,
@@ -218,7 +219,7 @@ class MetalView: MTKView, MTKViewDelegate {
         renderShadowMask(
             into: secondShadowTexture,
             for: scene.secondLight,
-            isEnabled: scene.secondLightEnabled,
+            isEnabled: scene.secondLightIntensity > 0,
             lightIndex: 1,
             shadowBufferIndex: shadowBufferIndex,
             shadowCasterVertices: shadowCasterVertices,
@@ -243,8 +244,8 @@ class MetalView: MTKView, MTKViewDelegate {
             /// Composite SpriteKit, lights, and shadows.
             var showShadowMask = scene.showShadowMask
             
-            let firstLightColor = colorComponents(scene.firstLightColor)
-            let secondLightColor = colorComponents(scene.secondLightColor)
+            let firstLightColor = colorComponents(SKColor(scene.firstLightColor))
+            let secondLightColor = colorComponents(SKColor(scene.secondLightColor))
             
             let displayData: [Float] = [
                 Float(scene.size.width),
@@ -255,10 +256,9 @@ class MetalView: MTKView, MTKViewDelegate {
                 Float(scene.secondLight.position.y),
                 Float(scene.lightFalloffRadius),
                 Float(scene.ambientLight),
-                Float(scene.directLight),
                 Float(scene.shadowOpacity),
-                Float(scene.firstLightEnabled ? 1 : 0),
-                Float(scene.secondLightEnabled ? 1 : 0),
+                Float(scene.firstLightIntensity),
+                Float(scene.secondLightIntensity),
                 firstLightColor.red,
                 firstLightColor.green,
                 firstLightColor.blue,
@@ -326,7 +326,7 @@ class MetalView: MTKView, MTKViewDelegate {
             return
         }
         
-        /// Get the segments lit from the scene with a CPU method
+        /// Get the segments lit from the SpriteKit scene with a CPU method.
         let shadowSegments = scene.shadowSegments(for: light, shadowCasterVertices: shadowCasterVertices)
         
         /// Each shadow segment contains five floats. Divide by 5 to find the segment count.

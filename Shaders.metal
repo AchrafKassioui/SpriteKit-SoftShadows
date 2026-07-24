@@ -40,67 +40,111 @@ fragment half4 displayFragment(
                                constant bool &showShadowMask [[buffer(0)]],
                                constant float *displayData [[buffer(1)]]
                                ) {
-    constexpr sampler textureSampler(coord::normalized, address::clamp_to_edge, filter::linear);
+    constexpr sampler textureSampler(
+                                     coord::normalized,
+                                     address::clamp_to_edge,
+                                     filter::linear
+                                     );
     
     /// Clamp the oversized fullscreen triangle coordinates to the visible texture area.
-    float2 uv = clamp(rasterizedVertex.uv, float2(0.0), float2(1.0));
-    
-    half firstShadow = firstShadowTexture.sample(textureSampler, uv).a;
-    half secondShadow = secondShadowTexture.sample(textureSampler, uv).a;
-    half shadowOpacity = half(displayData[9]);
-    
-    half firstLightEnabled = half(displayData[10]);
-    half secondLightEnabled = half(displayData[11]);
-    
-    firstShadow *= shadowOpacity;
-    secondShadow *= shadowOpacity;
-    
-    if (showShadowMask) {
-        /// Show the combined shadow masks.
-        half combinedShadow = max(firstShadow, secondShadow);
-        return half4(combinedShadow, combinedShadow, combinedShadow, 1.0);
-    }
-    
-    half4 contentColor = contentTexture.sample(textureSampler, uv);
+    float2 uv = clamp(
+                      rasterizedVertex.uv,
+                      float2(0.0),
+                      float2(1.0)
+                      );
     
     float2 sceneSize = float2(displayData[0], displayData[1]);
     float2 firstLightPosition = float2(displayData[2], displayData[3]);
     float2 secondLightPosition = float2(displayData[4], displayData[5]);
     float lightFalloffRadius = displayData[6];
+    
     half ambientLight = half(displayData[7]);
-    half directLight = half(displayData[8]);
+    half shadowOpacity = half(displayData[8]);
+    half firstLightIntensity = half(displayData[9]);
+    half secondLightIntensity = half(displayData[10]);
     
     half3 firstLightColor = half3(
+                                  half(displayData[11]),
                                   half(displayData[12]),
-                                  half(displayData[13]),
-                                  half(displayData[14])
+                                  half(displayData[13])
                                   );
     
     half3 secondLightColor = half3(
+                                   half(displayData[14]),
                                    half(displayData[15]),
-                                   half(displayData[16]),
-                                   half(displayData[17])
+                                   half(displayData[16])
                                    );
     
+    if (showShadowMask) {
+        /// Disabled lights contribute no shadow to the debug mask.
+        half firstShadow = firstLightIntensity > 0
+        ? firstShadowTexture.sample(textureSampler, uv).a * shadowOpacity
+        : half(0.0);
+        
+        half secondShadow = secondLightIntensity > 0
+        ? secondShadowTexture.sample(textureSampler, uv).a * shadowOpacity
+        : half(0.0);
+        
+        half combinedShadow = max(firstShadow, secondShadow);
+        return half4(combinedShadow, combinedShadow, combinedShadow, 1.0);
+    }
+    
+    half4 contentColor = contentTexture.sample(textureSampler, uv);
     float2 scenePosition = (uv - 0.5) * float2(sceneSize.x, -sceneSize.y);
     
-    float firstLightDistance = length(scenePosition - firstLightPosition);
-    float secondLightDistance = length(scenePosition - secondLightPosition);
-    
-    /// Light fades with distance only.
-    half firstLightAmount = half(1.0 - smoothstep(0.0, lightFalloffRadius, firstLightDistance)) * firstLightEnabled;
-    half secondLightAmount = half(1.0 - smoothstep(0.0, lightFalloffRadius, secondLightDistance)) * secondLightEnabled;
-    
-    /// Shadows block their own light.
-    half firstVisibleLight = firstLightAmount * (half(1.0) - firstShadow);
-    half secondVisibleLight = secondLightAmount * (half(1.0) - secondShadow);
-    
     /// Ambient light affects the entire scene, including areas reached by no direct light.
-    /// Each direct light adds its colored contribution after distance falloff and shadowing.
-    /// A total light value of 1 preserves the SpriteKit color. Lower values darken it, higher values brighten it.
-    half3 lightAmount = half3(ambientLight)
-    + firstLightColor * firstVisibleLight * directLight
-    + secondLightColor * secondVisibleLight * directLight;
+    /// Each enabled light adds its colored contribution after falloff and shadowing.
+    /// A total light value of 1 preserves the SpriteKit color. Lower values darken it,
+    /// while higher values brighten it.
+    half3 lightAmount = half3(ambientLight);
+    
+    if (firstLightIntensity > 0) {
+        float firstLightDistance = length(
+                                          scenePosition - firstLightPosition
+                                          );
+        
+        half firstLightFalloff = half(
+                                      1.0 - smoothstep(
+                                                       0.0,
+                                                       lightFalloffRadius,
+                                                       firstLightDistance
+                                                       )
+                                      );
+        
+        half firstShadow = firstShadowTexture
+            .sample(textureSampler, uv).a * shadowOpacity;
+        
+        half firstVisibleLight = firstLightFalloff
+        * (half(1.0) - firstShadow);
+        
+        lightAmount += firstLightColor
+        * firstVisibleLight
+        * firstLightIntensity;
+    }
+    
+    if (secondLightIntensity > 0) {
+        float secondLightDistance = length(
+                                           scenePosition - secondLightPosition
+                                           );
+        
+        half secondLightFalloff = half(
+                                       1.0 - smoothstep(
+                                                        0.0,
+                                                        lightFalloffRadius,
+                                                        secondLightDistance
+                                                        )
+                                       );
+        
+        half secondShadow = secondShadowTexture
+            .sample(textureSampler, uv).a * shadowOpacity;
+        
+        half secondVisibleLight = secondLightFalloff
+        * (half(1.0) - secondShadow);
+        
+        lightAmount += secondLightColor
+        * secondVisibleLight
+        * secondLightIntensity;
+    }
     
     contentColor.rgb *= lightAmount;
     
