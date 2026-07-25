@@ -15,9 +15,15 @@ import SpriteKit
 // MARK: App
 
 @main struct MyApp: App {
+    /// ID to reset the view and the scene
+    @State private var viewID = UUID()
+    
     var body: some Scene {
         WindowGroup {
-            ControlView()
+            ControlView(reset: {
+                viewID = UUID()
+            })
+            .id(viewID)
         }
     }
 }
@@ -30,6 +36,8 @@ struct ControlView: View {
     
     @State private var scene = SoftShadowsScene(size: CGSize(width: 200, height: 200))
     
+    let reset: () -> Void
+    
     var body: some View {
         if horizontalSizeClass == .compact {
             mobileView
@@ -41,7 +49,7 @@ struct ControlView: View {
     /// Default system sidebar for wide screens.
     private var desktopView: some View {
         NavigationSplitView {
-            ControlPanel(scene: scene)
+            ControlPanel(scene: scene, reset: reset)
                 .navigationTitle("Controls")
                 .navigationSplitViewColumnWidth(
                     min: 240,
@@ -54,16 +62,16 @@ struct ControlView: View {
         .navigationSplitViewStyle(.automatic)
     }
     
-    /// Mobile layout for narrow screens.
+    /// Custom layout for narrow screens.
     @ViewBuilder
     private var mobileView: some View {
         /// iPhone landscape
         if verticalSizeClass == .compact {
             HStack(spacing: 0) {
-                ControlPanel(scene: scene)
+                ControlPanel(scene: scene, reset: reset)
                     .frame(width: 300)
                 
-                //Divider()
+                Divider()
                 
                 sceneView
             }
@@ -72,9 +80,9 @@ struct ControlView: View {
             VStack(spacing: 0) {
                 sceneView
                 
-                //Divider()
+                Divider()
                 
-                ControlPanel(scene: scene)
+                ControlPanel(scene: scene, reset: reset)
                     .frame(height: 280)
             }
         }
@@ -100,16 +108,27 @@ struct AreaLightsRepresentable: UIViewRepresentable {
     }
 }
 
-// MARK: Panel
+// MARK: Control Panel
 
 private struct ControlPanel: View {
     @Bindable var scene: SoftShadowsScene
+    let reset: () -> Void
     
     var body: some View {
         List {
             LightsSection
             ColorsSection
             LightingSection
+            
+            Section {
+                Button(action: reset) {
+                    Label(
+                        "Reset App",
+                        systemImage: "arrow.counterclockwise"
+                    )
+                }
+                .frame(maxWidth: .infinity)
+            }
         }
         .environment(\.defaultMinListRowHeight, 36)
     }
