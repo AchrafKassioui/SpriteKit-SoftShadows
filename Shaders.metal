@@ -1,10 +1,12 @@
-//
-//  Shaders.metal
-//  SpriteKitSoftShadows
-//
-//  Created by Achraf Kassioui on 20/7/2026.
-//
-
+/**
+ 
+ # Metal Shaders
+ 
+ Achraf Kassioui
+ Created 6 Jul 2026
+ Updated 26 Jul 2026
+ 
+ */
 #include <metal_stdlib>
 using namespace metal;
 
@@ -92,10 +94,13 @@ fragment half4 displayFragment(
     half4 contentColor = contentTexture.sample(textureSampler, uv);
     float2 scenePosition = (uv - 0.5) * float2(sceneSize.x, -sceneSize.y);
     
-    /// Ambient light affects the entire scene, including areas reached by no direct light.
-    /// Each enabled light adds its colored contribution after falloff and shadowing.
-    /// A total light value of 1 preserves the SpriteKit color. Lower values darken it,
-    /// while higher values brighten it.
+    /**
+     
+     Ambient light affects the entire scene, including areas reached by no direct light.
+     Each enabled light adds its colored contribution after falloff and shadowing.
+     A total light value of 1 preserves the SpriteKit color. Lower values darken it, higher values brighten it.
+     
+     */
     half3 lightAmount = half3(ambientLight);
     
     if (firstLightIntensity > 0) {
@@ -193,7 +198,7 @@ vertex ShadowVertexOutput shadowVertex(
     float2 endpointA = segmentEnd;
     float2 endpointB = segmentStart;
     
-    /// x chooses the endpoint; y chooses near edge or projected edge.
+    /// x chooses the endpoint, y chooses near edge or projected edge.
     float2 shadowCoordinates[6] = {
         float2(0.0, 1.0),
         float2(1.0, 1.0),
@@ -216,7 +221,7 @@ vertex ShadowVertexOutput shadowVertex(
     float2 offsetB = float2(lightRadius, -lightRadius) * safeNormalize(directionB).yx;
     float2 endpointOffset = mix(offsetA, offsetB, shadowCoordinate.x);
     
-    /// Near vertices stay on the segment; far vertices project away from the light.
+    /// Near vertices stay on the segment, far vertices project away from the light.
     float shadowNear = shadowCoordinate.y;
     float2 projectedPosition = mix(endpointDirection - endpointOffset, endpoint, shadowNear);
     
@@ -250,11 +255,14 @@ fragment half4 shadowFragment(ShadowVertexOutput input [[stage_in]]) {
                              step(input.penumbraCoordinates.yw, float2(0.0))
                              );
     
-    /// Convert visible-light coverage into the occlusion contributed by this segment.
-    ///
-    /// Adjacent segment contributions are accumulated by additive blending. A seam
-    /// correction must not be applied here because it would be repeated for every
-    /// overlapping shadow quad.
+    /**
+     
+     Convert visible-light coverage into the occlusion contributed by this segment.
+     
+     Adjacent segment contributions are accumulated by additive blending.
+     A seam correction must not be applied here because it would be repeated for every overlapping shadow quad.
+     
+     */
     float shadowAmount = clamp(1.0 - visibleLight, 0.0, 1.0);
     shadowAmount *= step(input.edgeClip, 0.0);
     shadowAmount *= input.shadowStrength;

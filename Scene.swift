@@ -4,13 +4,13 @@
  
  Achraf Kassioui
  Created 6 Jul 2026
- Updated 20 Jul 2026
+ Updated 26 Jul 2026
  
  */
 import SpriteKit
 import SwiftUI
 
-/// Initial values shared by the scene and its controls.
+/// Initial values used by the scene and the UI.
 enum RenderingDefaults {
     static let firstLightColor = Color(hex: "FFD673")
     static let secondLightColor = Color(hex: "67BFBF")

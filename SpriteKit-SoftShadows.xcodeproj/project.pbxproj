@@ -31,6 +31,14 @@
 		DEF5F236300ED562004C74A7 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		DEC802A530168C890003C07C /* Media */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = Media;
+			sourceTree = "<group>";
+		};
+/* End PBXFileSystemSynchronizedRootGroup section */
+
 /* Begin PBXFrameworksBuildPhase section */
 		000000000000000130000000 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
@@ -43,6 +51,7 @@
 		000000000000000000000001 = {
 			isa = PBXGroup;
 			children = (
+				DEC802A530168C890003C07C /* Media */,
 				DEF5F236300ED562004C74A7 /* README.md */,
 				DEF5F234300EA3D9004C74A7 /* Shaders.metal */,
 				DEF5F232300EA273004C74A7 /* Renderer.swift */,
@@ -68,6 +77,9 @@
 				000000000000000140000000 /* Resources */,
 			);
 			buildRules = (
+			);
+			fileSystemSynchronizedGroups = (
+				DEC802A530168C890003C07C /* Media */,
 			);
 			name = SpriteKitSoftShadows;
 			productName = MyApp;
