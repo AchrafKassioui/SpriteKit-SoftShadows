@@ -4,7 +4,7 @@ This is a demo implementation of area lighting with soft shadows using Apple Spr
 
 ![SpriteKit-SoftShadows-macOS](Media/SpriteKit-SoftShadows-macOS.png)
 
-<img src="Media/SpriteKit-SoftShadows-iOS-17Pro.png" alt="SpriteKit-SoftShadows-iOS-17Pro" style="width:50%;" />
+<img src="Media/SpriteKit-SoftShadows-iOS-17Pro.png" alt="SpriteKit-SoftShadows-iOS-17Pro" style="zoom: 50%;" />
 
 ## How It Works
 
