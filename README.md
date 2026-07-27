@@ -12,7 +12,7 @@ This is a demo implementation of area lighting with soft shadows using Apple Spr
 
 ## How It Works
 
-The app uses an `MTKView` Metal view to drive the rendering loop at the desired frame rate. Each frame:
+The app uses `MTKView` to drive the rendering loop at the desired frame rate. Each frame:
 
 - SpriteKit renders the scene into a Metal texture using `SKRenderer`.
 - The CPU sends each light's properties and the relevant shape edges to a Metal vertex shader.
@@ -43,5 +43,12 @@ The project includes a demo app that runs on iOS and Mac Catalyst. To launch the
 - Apple Documentation, [Metal View](https://developer.apple.com/documentation/metalkit/mtkview).
 - Apple Documentation, [SKRenderer](https://developer.apple.com/documentation/spritekit/skrenderer).
 - Apple Documentation Archive, [Metal Best Practices Guide - Triple Buffering](https://developer.apple.com/library/archive/documentation/3DDrawing/Conceptual/MTLBestPracticesGuide/TripleBuffering.html).
+- Apple Documentation, [Observation](https://developer.apple.com/documentation/observation).
 - Apple Developer Forums, [thread](https://developer.apple.com/forums/thread/817914?answerId=885088022) about color space and stencil attachment when rendering SKShapeNode content with SKRenderer.
 
+## License
+
+This project is licensed under the Apache License 2.0.
+
+If this project helps your work, attribution or a link back is appreciated:
+https://github.com/AchrafKassioui/SpriteKit-SoftShadows
