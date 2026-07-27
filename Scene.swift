@@ -2,6 +2,11 @@
  
  # SpriteKit Scene
  
+ ## Links
+ 
+ https://developer.apple.com/forums/thread/817914?answerId=885088022
+ Discussion of stencil attachment when rendering SKShapeNode content with SKRenderer and color space
+ 
  Achraf Kassioui
  Created 6 Jul 2026
  Updated 26 Jul 2026
