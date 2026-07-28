@@ -187,7 +187,7 @@ private struct ControlPanel: View {
                 title: "Light Falloff",
                 value: $scene.lightFalloffRadius,
                 defaultValue: RenderingDefaults.lightFalloffRadius,
-                range: 80...1400,
+                range: 80...3000,
                 decimalPlaces: 0
             )
             

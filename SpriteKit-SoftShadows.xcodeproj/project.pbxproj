@@ -78,9 +78,6 @@
 			);
 			buildRules = (
 			);
-			fileSystemSynchronizedGroups = (
-				DEC802A530168C890003C07C /* Media */,
-			);
 			name = SpriteKitSoftShadows;
 			productName = MyApp;
 			productReference = DEF5F22F300E9F65004C74A7 /* SpriteKitSoftShadows.app */;

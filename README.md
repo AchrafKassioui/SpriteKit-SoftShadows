@@ -2,13 +2,22 @@
 
 This is a demo implementation of area lighting with soft shadows using Apple SpriteKit and custom Metal rendering.
 
-<img src="Media/SpriteKit-SoftShadows-macOS.png" alt="SpriteKit Soft Shadows on macOS" />
-
-<img src="Media/SpriteKit-SoftShadows-iOS-17Pro.png" alt="SpriteKit Soft Shadows on iPhone" width="33%" />
+<img src="Media/SpriteKit Soft Shadows Composition.png" alt="SpriteKit Soft Shadows Composition" style="width:100%;" />
 
 ## Video
 
 [YouTube Video Demo](https://www.youtube.com/watch?v=afh7Xi9GBjk) (1:55).
+
+## Getting Started
+
+<img src="Media/Device Composition.png" alt="Device Composition" style="width:100%;" />
+
+The app runs on iOS and Mac Catalyst. To launch it:
+
+- Download and open the project in Xcode.
+- Update the project's signing.
+- Select a target device or simulator.
+- Run.
 
 ## How It Works
 
@@ -21,15 +30,6 @@ The app uses `MTKView` to drive the rendering loop at the desired frame rate. Ea
 - A final fragment shader combines the SpriteKit texture, lights, and shadow masks to produce the displayed image.
 
 The SwiftUI controls update variables inside the SpriteKit scene through `@Observable`. The rendering loop consumes the new values on its next cycle.
-
-## Getting Started
-
-The project includes a demo app that runs on iOS and Mac Catalyst. To launch the app:
-
-- Download and open the project in Xcode.
-- Update the project's signing.
-- Select a target device or simulator.
-- Run.
 
 ## Findings
 
