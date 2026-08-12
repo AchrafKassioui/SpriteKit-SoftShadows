@@ -1,6 +1,6 @@
 # SpriteKit Soft Shadows
 
-This is a demo implementation of area lighting with soft shadows using Apple SpriteKit and custom Metal rendering.
+This is an implementation of 2D soft shadows using Metal and Apple SpriteKit.
 
 <img src="Media/SpriteKit Soft Shadows Composition.png" alt="SpriteKit Soft Shadows Composition" style="width:100%;" />
 
@@ -12,7 +12,7 @@ This is a demo implementation of area lighting with soft shadows using Apple Spr
 
 <img src="Media/Device Composition.png" alt="Device Composition" style="width:100%;" />
 
-The app runs on iOS and Mac Catalyst. To launch it:
+The demo app runs on iOS and Mac Catalyst. To launch it:
 
 - Download and open the project in Xcode.
 - Update the project's signing.
@@ -30,6 +30,29 @@ The app uses `MTKView` to drive the rendering loop at the desired frame rate. Ea
 - A final fragment shader combines the SpriteKit texture, lights, and shadow masks to produce the displayed image.
 
 The SwiftUI controls update variables inside the SpriteKit scene through `@Observable`. The rendering loop consumes the new values on its next cycle.
+
+## SpriteKit & Metal
+
+Technically, this proof of concept doesn't have to use SpriteKit. The shadow pipeline is bare Metal. SpriteKit is used as a convenient scene graph and base renderer:
+
+- SpriteKit renders the base unlit image with the sprites.
+
+- `SKScene` holds the data structures that define a shadow caster: a convex polygon defined with vertices, and the visual node associated with it:
+
+  ```swift
+  struct ShadowCaster {
+      let node: SKSpriteNode
+  
+      /// Convex outline in local space, wound counter-clockwise.
+      let vertices: [CGPoint]
+  }
+  ```
+
+- `MTKView`  receives user input and passes it to `SKScene`. The scene uses SpriteKit hit testing to find and move the selected node.
+
+- Each frame, `MTKView` asks `SKScene` for the caster vertices in scene coordinates, after the node transforms have been applied. The scene determines which edges face each light, and the renderer copies those edge endpoints into a Metal buffer for the shadow shaders.
+
+It's possible to replace SpriteKit with a full custom rendering path. To me this shows how nice SpriteKit is: we can use it as base, then add or replace parts of it with a Metal pipeline as needed.
 
 ## Findings
 
