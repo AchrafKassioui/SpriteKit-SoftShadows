@@ -43,7 +43,7 @@ Technically, this proof of concept doesn't have to use SpriteKit. The shadow pip
   struct ShadowCaster {
       let node: SKSpriteNode
   
-      /// Convex outline in local space, wound counter-clockwise.
+      /// Convex outline in local space, counter-clockwise winding.
       let vertices: [CGPoint]
   }
   ```
