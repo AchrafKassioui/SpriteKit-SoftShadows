@@ -2,14 +2,9 @@
  
  # SpriteKit Scene
  
- ## Links
- 
- https://developer.apple.com/forums/thread/817914?answerId=885088022
- Discussion of stencil attachment when rendering SKShapeNode content with SKRenderer and color space
- 
  Achraf Kassioui
  Created 6 Jul 2026
- Updated 26 Jul 2026
+ Updated 12 Aug 2026
  
  */
 import SpriteKit
@@ -44,7 +39,7 @@ class SoftShadowsScene: SKScene {
     struct ShadowCaster {
         let node: SKSpriteNode
         
-        /// Convex outline in local space, wound counter-clockwise.
+        /// Convex outline in local space, counter-clockwise winding.
         let vertices: [CGPoint]
     }
     

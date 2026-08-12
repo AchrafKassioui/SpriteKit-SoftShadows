@@ -2,7 +2,7 @@
  
  # Renderer
  
- A Metal view that drives a custom Metal pipeline on top of SpriteKit rendering via SKRenderer.
+ A Metal view that drives a custom Metal pipeline on top of SpriteKit SKRenderer.
  
  Achraf Kassioui
  Created 6 Jul 2026
